@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Moving Car Animation</title>
+    <style>
+        body {
+            background: #222;
+            text-align: center;
+            color: white;
+        }
+        canvas {
+            background: #555;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>🚗 Moving Car on Road (C + Flask)</h2>
+
+<canvas id="road" width="800" height="200"></canvas>
+
+<script>
+const canvas = document.getElementById("road");
+const ctx = canvas.getContext("2d");
+
+function drawRoad() {
+    ctx.fillStyle = "#333";
+    ctx.fillRect(0, 100, 800, 100);
+
+    ctx.strokeStyle = "white";
+    ctx.setLineDash([20, 15]);
+    ctx.beginPath();
+    ctx.moveTo(0, 150);
+    ctx.lineTo(800, 150);
+    ctx.stroke();
+}
+
+function drawCar(x) {
+    ctx.fillStyle = "red";
+    ctx.fillRect(x, 120, 80, 30);
+
+    ctx.fillStyle = "black";
+    ctx.beginPath();
+    ctx.arc(x + 15, 155, 8, 0, Math.PI * 2);
+    ctx.arc(x + 65, 155, 8, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+function animate() {
+    fetch("/position")
+        .then(res => res.text())
+        .then(x => {
+            ctx.clearRect(0, 0, 800, 200);
+            drawRoad();
+            drawCar(parseInt(x));
+        });
+}
+
+setInterval(animate, 100);
+</script>
+
+</body>
+</html>
